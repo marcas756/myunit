@@ -76,3 +76,104 @@ Finally, `<TSE>` signifies the **end of the test suite** `selftest`. It summariz
 - `0` successful test cases,
 - `1` successful assertion.
 
+## Verbosity Levels in myunit
+
+The `myunit` testing framework provides flexible verbosity levels to control the amount and type of output generated during test execution. This allows developers to adjust the feedback they receive based on their specific needs, ranging from completely silent operation to highly detailed reporting.
+
+Verbosity levels are configured using predefined constants. These constants determine both the level of detail and whether assertion results are included in the output.
+
+
+| **Constant**                    | **Value** | **Description**                                                                                   |
+|----------------------------------|-----------|---------------------------------------------------------------------------------------------------|
+| `MYUNIT_SILENT`                 | `0`       | No output. The framework operates in complete silence.                                           |
+| `MYUNIT_VERB1_NO_ASSERTS`       | `1`       | Normal output; assertions are not included in the logs.                                          |
+| `MYUNIT_VERB1_FAILED_ASSERTS`   | `2`       | Normal output; only failed assertions are printed.                                               |
+| `MYUNIT_VERB1_ALL_ASSERTS`      | `3`       | Normal output; all assertions, whether successful or failed, are printed.                       |
+| `MYUNIT_VERB2_NO_ASSERTS`       | `4`       | Detailed output; assertions are not included in the logs.                                        |
+| `MYUNIT_VERB2_FAILED_ASSERTS`   | `5`       | Detailed output; only failed assertions are printed, along with additional contextual details.   |
+| `MYUNIT_VERB2_ALL_ASSERTS`      | `6`       | Detailed output; all assertions, whether successful or failed, are printed with contextual details. |
+| `MYUNIT_VERB3_NO_ASSERTS`       | `7`       | Extensive output; assertions are not included in the logs, but in-depth debugging information is provided. |
+| `MYUNIT_VERB3_FAILED_ASSERTS`   | `8`       | Extensive output; only failed assertions are printed, with in-depth debugging information.       |
+| `MYUNIT_VERB3_ALL_ASSERTS`      | `9`       | Extensive output; all assertions, whether successful or failed, are printed with maximum detail. |
+
+### Setting the MYUNIT_VERBOSE Level at Compiler Invocation
+
+To configure the verbosity level during compilation, you can define the MYUNIT_VERBOSE macro directly in the compiler's invocation command. This allows you to dynamically control the verbosity level without modifying the source code. The exact method for setting compiler macros depends on the compiler or toolchain being used, so you should refer to the user manual of your specific compiler/linker suite for detailed instructions.
+
+For example, using GCC, you can define the verbosity level as follows (see -D only):
+
+```
+gcc -DMYUNIT_VERBOSE=MYUNIT_VERB1_ALL_ASSERTS -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/myunit_selftest.d" -MT"src/myunit_selftest.o" -o "src/myunit_selftest.o" "../src/myunit_selftest.c"
+```
+
+
+
+### Verbosity Levels: MYUNIT_VERB*_NO_ASSERTS
+
+The MYUNIT_VERB*_NO_ASSERTS verbosity levels (MYUNIT_VERB1_NO_ASSERTS, MYUNIT_VERB2_NO_ASSERTS, or MYUNIT_VERB3_NO_ASSERTS) are designed for scenarios where assertion results are not included in the output. These levels provide a streamlined output, focusing only on the structure and results of the test execution, while excluding any details about individual assertions.
+
+```
+<TSB> selftest "../src/myunit_selftest.c" "Nov 15 2024" "19:43:32"
+<TCB> selftest test_assert
+<TCE> selftest test_assert 1 1
+<TSE> selftest 1 1 0 1
+```
+### Verbosity Levels: MYUNIT_VERB*_FAILED_ASSERTS
+
+The FAILED_ASSERTS verbosity levels (MYUNIT_VERB1_FAILED_ASSERTS, MYUNIT_VERB2_FAILED_ASSERTS, or MYUNIT_VERB3_FAILED_ASSERTS) are designed to provide feedback focusing exclusively on failed assertions. This minimizes noise by suppressing information about successful assertions, making it easier to locate and address issues during testing. 
+
+```
+<TSB> selftest "../src/myunit_selftest.c" "Nov 15 2024" "19:46:11"
+<TCB> selftest test_assert
+<TCF> selftest test_assert 15 "Check if 1 + 1 equals 3" "(1 + 1 == 3)"
+<TCE> selftest test_assert 1 1
+<TSE> selftest 1 1 0 1
+```
+
+### Verbosity Levels: MYUNIT_VERB*_ALL_ASSERTS
+
+When the verbosity level is set to one of the *_ALL_ASSERTS constants (MYUNIT_VERB1_ALL_ASSERTS, MYUNIT_VERB2_ALL_ASSERTS, or MYUNIT_VERB3_ALL_ASSERTS), the output includes all assertion results, whether they pass or fail. This is the most transparent level of reporting for assertions, providing detailed insight into every check performed during testing.
+
+```
+<TSB> selftest "../src/myunit_selftest.c" "Nov 15 2024" "19:49:42"
+<TCB> selftest test_assert
+<TCP> selftest test_assert 11 "Check if 1 + 1 equals 2" "(1 + 1 == 2)"
+<TCF> selftest test_assert 15 "Check if 1 + 1 equals 3" "(1 + 1 == 3)"
+<TCE> selftest test_assert 1 1
+<TSE> selftest 1 1 0 1
+```
+
+### Assertion Detail Levels: MYUNIT_VERB3_*_ASSERTS
+
+At the VERB3 verbosity level, the output provides extensive details about each assertion, including the test suite, unit test name, line number in the source code, the assertion's text message, and the evaluated test condition. This information is presented for both passed and failed assertions, offering maximum context for debugging and analysis.
+
+```
+<TAG> TEST_SUITE TEST_NAME LINE_NUMBER "ASSERTION_MESSAGE" "(TEST_CONDITION)"
+
+<TCP> selftest test_assert 11 "Check if 1 + 1 equals 2" "(1 + 1 == 2)"
+<TCF> selftest test_assert 15 "Check if 1 + 1 equals 3" "(1 + 1 == 3)"
+```
+
+### Assertion Detail Levels: MYUNIT_VERB2_*_ASSERTS 
+
+The VERB2 verbosity level provides detailed information about test assertions, including their result, test suite name, unit test name, line number in the source code, and a descriptive text message explaining the assertion. However, this level omits the explicit evaluation of the test condition, offering a balance between detail and conciseness.
+
+
+```
+<TAG> TEST_SUITE TEST_NAME LINE_NUMBER "ASSERTION_MESSAGE"
+
+<TCP> selftest test_assert 11 "Check if 1 + 1 equals 2"
+<TCF> selftest test_assert 15 "Check if 1 + 1 equals 3"
+```
+
+### Assertion Detail Levels: MYUNIT_VERB1_*_ASSERTS 
+
+At the VERB1 verbosity level, the output provides a concise summary of assertions, focusing on test results with minimal additional information. Each line logs the result of an assertion, including the test suite name, the unit test name, and the line number of the assertion in the source code.
+
+```
+<TAG> TEST_SUITE TEST_NAME LINE_NUMBER
+
+<TCP> selftest test_assert 11
+<TCF> selftest test_assert 15
+```
+
