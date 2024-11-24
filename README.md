@@ -68,7 +68,7 @@ The `<TCB>` line indicates the beginning of the test case `test_assert`, signali
 
 The `<TCE>` line marks the end of the test case `test_assert`. The numbers `1 1` indicate that there was one successful assertion and one failed assertion within this test case.
 
-Finally, `<TSE>` signifies the **end of the test suite** `selftest`. It summarizes the overall results as
+Finally, `<TSE>` signifies the end of the test suite `selftest`. It summarizes the overall results as
 - `1` failed test case,
 - `1` failed assertion,
 - `0` successful test cases,
