@@ -106,8 +106,6 @@ For example, using GCC, you can define the verbosity level as follows (see -D on
 gcc -DMYUNIT_VERBOSE=MYUNIT_VERB1_ALL_ASSERTS -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/myunit_selftest.d" -MT"src/myunit_selftest.o" -o "src/myunit_selftest.o" "../src/myunit_selftest.c"
 ```
 
-
-
 ### Verbosity Levels: MYUNIT_VERB*_NO_ASSERTS
 
 The MYUNIT_VERB*_NO_ASSERTS verbosity levels (MYUNIT_VERB1_NO_ASSERTS, MYUNIT_VERB2_NO_ASSERTS, or MYUNIT_VERB3_NO_ASSERTS) are designed for scenarios where assertion results are not included in the output. These levels provide a streamlined output, focusing only on the structure and results of the test execution, while excluding any details about individual assertions.
@@ -186,8 +184,6 @@ Test suites in MyUnit are collections of test cases, each located within a singl
 The `myunit_platform_init()` function is responsible for initializing platform-specific resources essential for running unit tests. This may include setting up peripherals such as UART for debug output, configuring GPIO or LEDs for test status indication, or preparing clocks and other hardware resources required for the test environment. It is important to ensure that all necessary peripherals are correctly initialized and to include error-handling mechanisms to detect and address initialization failures, ensuring the platform is fully prepared for testing.
 
 ```c
-Example : 
-
 void myunit_platform_init() {
     // Example for STM32:
     HAL_Init();             // Initialize the HAL library.
@@ -199,8 +195,6 @@ void myunit_platform_init() {
 The `myunit_platform_deinit()` function is responsible for cleaning up or deinitializing any resources initialized by `myunit_platform_init()`, ensuring the platform returns to a clean state after tests are completed. Typical use cases include closing communication interfaces, resetting peripherals, freeing memory resources, and powering down hardware used exclusively for testing. For proper implementation, ensure that each resource initialized in `myunit_platform_init()` has a corresponding deinitialization step and include checks to safely release resources without causing unintended side effects.
 
 ```c
-Example :
-
 void myunit_platform_deinit() {
     // Example for STM32:
     HAL_UART_DeInit(&huart2);  // Deinitialize UART.
@@ -213,7 +207,7 @@ The `myunit_platform_printf(const char *format, ...)` function provides a platfo
 
 
 ```c
-Example : 
+
 
 int myunit_platform_printf ( const char * format, ... )
 {
