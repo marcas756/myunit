@@ -392,15 +392,26 @@ However, as a writer of unit tests, you typically use the higher-level assertion
     MYUNIT_ASSERT_CHECKPOINT_MISSED(4);
 ```
 
+### Understanding Tags in MyUnit
+Tags in MyUnit (`<...>`) are structured markers used to generate consistent, machine-readable output during test execution. These tags provide key information about the progress and results of test suites and cases, including details about assertions, failures, and summaries. Each tag follows a predefined format, making it easy to parse and analyze the output programmatically or manually.
 
+   - `<TSB>`: Marks the beginning of a test suite. Includes the suite name, source file, and timestamp.
+   - `<TSE>`: Marks the end of a test suite. Includes a summary of passed and failed test cases.
+   - `<TCB>`: Marks the beginning of a test case. Includes the test case name.
+   - `<TCE>`: Marks the end of a test case. Summarizes the results of assertions in the test case.
+   - `<TCP>`: Indicates a passed assertion. Includes the test suite name, test case name, line number, assertion message, and evaluated condition.
+   - `<TCF>`: Indicates a failed assertion. Provides the same details as `<TCP>`, along with information about the failure.
 
+```plaintext
+<TSB> selftest "../src/myunit_selftest.c" "Nov 15 2024" "19:49:42"
+<TCB> selftest test_assert
+<TCP> selftest test_assert 11 "Check if 2 + 2 equals 4" "(2 + 2 == 4)"
+<TCF> selftest test_assert 15 "Check if 2 + 2 equals 5" "(2 + 2 == 5)"
+<TCE> selftest test_assert 1 1
+<TSE> selftest 1 1 0 1
+```
 
-
-    
-
-
-
-
+Tags provide detailed information about where and why a test passed or failed, including the line number and test message. The structured format allows for easy parsing by scripts or tools, enabling integration with continuous integration (CI) systems. The standardized output format ensures that both humans and machines can interpret the results consistently.
 
 
 
