@@ -1,29 +1,30 @@
-/*! \copyright
- 
-   https://opensource.org/license/mit/
+/*!
+    Copyright (c) 2025, Marco Bacchi <marco@bacchi.at>
 
-   Copyright 2013-2023 Marco Bacchi <marco@bacchi.at>
-   
-   Permission is hereby granted, free of charge, to any person
-   obtaining a copy of this software and associated documentation
-   files (the "Software"), to deal in the Software without
-   restriction, including without limitation the rights to use,
-   copy, modify, merge, publish, distribute, sublicense, and/or sell
-   copies of the Software, and to permit persons to whom the
-   Software is furnished to do so, subject to the following
-   conditions:
-   
-   The above copyright notice and this permission notice shall be
-   included in all copies or substantial portions of the Software.
-   
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-   OTHER DEALINGS IN THE SOFTWARE.
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this
+       list of conditions and the following disclaimer.
+
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
+       and/or other materials provided with the distribution.
+
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software
+       without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
@@ -33,6 +34,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
+
 
 
 #define MYUNIT_SILENT                   0   /*!< \brief No output, silent mode */
@@ -55,6 +58,13 @@
 #if !defined(MYUNIT_VERBOSE)
    #define MYUNIT_VERBOSE  MYUNIT_VERB3_ALL_ASSERTS
 #endif
+
+#ifdef MYUNIT_LIST_UNITTESTS
+    #undef MYUNIT_VERBOSE
+    #define MYUNIT_VERBOSE  MYUNIT_SILENT
+#endif
+
+
 
 
 /*!
@@ -101,6 +111,8 @@ extern int myunit_testcase_success_count;           /*!< Successfully completed 
 extern int myunit_testcase_fail_count;              /*!< Failed test cases in the test suite. */
 extern int myunit_testcase_assert_fail_count;       /*!< Failed assertions in the current test case. Reset after each test case.*/
 extern void (*myunit_action)(void);                 /*!< Function pointer invoked on assertion failure; if NULL, no action is taken. */
+extern int myunit_sequence_fail_count;
+
 
 /*!
     \brief Sets the action for handling assertion failures.
@@ -396,8 +408,16 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
              to the test case and its name as a string for logging purposes.
     \param name The name of the test case to be executed. This should correspond to the name used in `MYUNIT_TESTCASE`.
 */
+#ifdef MYUNIT_LIST_UNITTESTS
+#define MYUNIT_EXEC_TESTCASE(name) \
+        myunit_platform_printf("%s\n",#name)
+#else
 #define MYUNIT_EXEC_TESTCASE(name) \
         myunit_exec_testcase(myunit_testcase_##name,#name)
+#endif
+
+
+
 
 
 /*!
@@ -485,8 +505,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
     \param var1 The first value to compare.
     \param var2 The second value to compare.
 */
-#define MYUNIT_ASSERT_VAL_EQUAL(var1,var2) \
-    MYUNIT_ASSERT("VAL_EQUAL",var1 == var2)
+#define MYUNIT_ASSERT_EQUAL(var1,var2) \
+    MYUNIT_ASSERT("EQUAL",var1 == var2)
 
 /*!
     \brief Asserts that two values are different.
@@ -494,8 +514,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
     \param var1 The first value to compare.
     \param var2 The second value to compare.
 */
-#define MYUNIT_ASSERT_VAL_DIFFERENT(var1,var2) \
-    MYUNIT_ASSERT("VAL_DIFFERENT",var1 != var2)
+#define MYUNIT_ASSERT_DIFFER(var1,var2) \
+    MYUNIT_ASSERT("DIFFER",var1 != var2)
 
 /*!
     \brief Asserts that a value fits within 32 bits.
@@ -564,5 +584,40 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 */
 #define MYUNIT_ASSERT_BIT_SET(var, pos) \
     MYUNIT_ASSERT("BIT_SET",  !(!((var) & (1 << (pos)))))
+
+
+#define MYUNIT_SEQUENCE_BEGIN() \
+        do { \
+        myunit_sequence_fail_count = myunit_testcase_assert_fail_count;
+
+
+#define MYUNIT_SEQUENCE_END() \
+        myunit_sequence_fail_count = myunit_testcase_assert_fail_count - myunit_sequence_fail_count; \
+        }while(0)
+
+
+#define MYUNIT_SEQUENCE_STATUS() (myunit_sequence_fail_count)
+#define MYUNIT_HAS_SEQUENCE_PASSED() (MYUNIT_SEQUENCE_STATUS() == 0)
+#define MYUNIT_HAS_SEQUENCE_FAILED() (!MYUNIT_HAS_SEQUENCE_PASSED())
+
+#define MYUNIT_ASSERT_SEQUENCE_PASSED() \
+    MYUNIT_ASSERT("SEQ_PASSED",MYUNIT_HAS_SEQUENCE_PASSED())
+
+#define MYUNIT_ASSERT_SEQUENCE_FAILED() \
+    MYUNIT_ASSERT("SEQ_FAILED",MYUNIT_HAS_SEQUENCE_FAILED())
+
+
+#define MYUNIT_ASSERT_TRUE(cond) \
+    MYUNIT_ASSERT("TRUE",  (cond) == true)
+
+#define MYUNIT_ASSERT_FALSE(cond) \
+    MYUNIT_ASSERT("FALSE",  (cond) == false)
+
+
+#define MYUNIT_ASSERT_IS_NULL(ptr)       \
+    MYUNIT_ASSERT("IS_NULL", (ptr) == NULL )
+
+#define MYUNIT_ASSERT_NOT_NULL(ptr)       \
+    MYUNIT_ASSERT("IS_NULL", (ptr) != NULL )
 
 #endif /* MYUNIT_H_ */

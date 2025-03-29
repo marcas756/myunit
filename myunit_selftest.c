@@ -1,3 +1,31 @@
+/*!
+    Copyright (c) 2025, Marco Bacchi <marco@bacchi.at>
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this
+       list of conditions and the following disclaimer.
+
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
+       and/or other materials provided with the distribution.
+
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software
+       without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "myunit.h"
 
 
@@ -18,7 +46,7 @@ MYUNIT_TESTCASE(test_assert)
 
 MYUNIT_TESTCASE(test_assert_val_equal)
 {
-    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_VAL_EQUAL.
+    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_EQUAL.
     // It compares two variables for equality.
 
     int a = 5;
@@ -27,16 +55,16 @@ MYUNIT_TESTCASE(test_assert_val_equal)
 
     // Passing Assertion:
     // Test that variable 'a' is equal to variable 'b'. This is expected to pass as both are 5.
-    MYUNIT_ASSERT_VAL_EQUAL(a, b);
+    MYUNIT_ASSERT_EQUAL(a, b);
 
     // Failing Assertion:
     // Test that variable 'a' is equal to variable 'c'. This is expected to fail as a is 5 and c is 10.
-    MYUNIT_ASSERT_VAL_EQUAL(a, c);
+    MYUNIT_ASSERT_EQUAL(a, c);
 }
 
 MYUNIT_TESTCASE(test_assert_val_different)
 {
-    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_VAL_DIFFERENT.
+    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_DIFFER.
     // It compares two variables to check if they are different.
 
     int x = 3;
@@ -45,11 +73,11 @@ MYUNIT_TESTCASE(test_assert_val_different)
 
     // Passing Assertion:
     // Test that variable 'x' is different from variable 'y'. This is expected to pass as x is 3 and y is 4.
-    MYUNIT_ASSERT_VAL_DIFFERENT(x, y);
+    MYUNIT_ASSERT_DIFFER(x, y);
 
     // Failing Assertion:
     // Test that variable 'x' is different from variable 'z'. This is expected to fail as both x and z are 3.
-    MYUNIT_ASSERT_VAL_DIFFERENT(x, z);
+    MYUNIT_ASSERT_DIFFER(x, z);
 }
 
 MYUNIT_TESTCASE(test_assert_mem_equal)
@@ -247,7 +275,7 @@ MYUNIT_TESTCASE(set_action_success) {
     custom_action_executed = 0; // Reset the check variable
     MYUNIT_SET_ACTION(custom_action); // Set the custom action
     MYUNIT_ASSERT("Trigger custom action", 0); // Trigger a failure to invoke the custom action
-    MYUNIT_ASSERT_VAL_EQUAL(custom_action_executed, 1); // Verify that the action was executed
+    MYUNIT_ASSERT_EQUAL(custom_action_executed, 1); // Verify that the action was executed
 }
 
 MYUNIT_TESTCASE(reset_action) {
@@ -255,7 +283,7 @@ MYUNIT_TESTCASE(reset_action) {
     MYUNIT_SET_ACTION(NULL); // Reset the action to NULL
     MYUNIT_ASSERT("No action should execute", 1); // Ensure no failure happens
     MYUNIT_ASSERT("Trigger custom action", 0); // Trigger a failure to invoke the custom action
-    MYUNIT_ASSERT_VAL_EQUAL(custom_action_executed, 0); // Verify that the action was not executed
+    MYUNIT_ASSERT_EQUAL(custom_action_executed, 0); // Verify that the action was not executed
 }
 
 
@@ -274,7 +302,7 @@ MYUNIT_TESTSUITE(selftest)
 {
     MYUNIT_TESTSUITE_BEGIN();
 
-    MYUNIT_EXEC_TESTCASE(test_assert);  /*
+    MYUNIT_EXEC_TESTCASE(test_assert);
     MYUNIT_EXEC_TESTCASE(test_assert_val_equal);
     MYUNIT_EXEC_TESTCASE(test_assert_val_different);
 
@@ -292,7 +320,7 @@ MYUNIT_TESTSUITE(selftest)
     MYUNIT_EXEC_TESTCASE(test_checkpoint_missed);
 
     MYUNIT_EXEC_TESTCASE(set_action_success);
-    MYUNIT_EXEC_TESTCASE(reset_action);*/
+    MYUNIT_EXEC_TESTCASE(reset_action);
 
     MYUNIT_TESTSUITE_END();
 }
