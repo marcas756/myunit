@@ -15,6 +15,5 @@ include_directories (
     ${PROJECT_SOURCE_DIR}/src
     )
 
-add_executable(myunit_selftest myunit_selftest.c myunit_platform_template.c)
-#set_target_properties(myunit_slist PROPERTIES COMPILE_DEFINITIONS "UNITTEST_LIST_TYPE=UNITTEST_LIST_TYPE_SLIST")
+add_executable(myunit_selftest myunit_selftest.c )
 target_link_libraries(myunit_selftest myunit)
