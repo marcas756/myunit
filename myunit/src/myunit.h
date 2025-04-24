@@ -555,8 +555,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
     \param var  The variable being checked
 */
-#define MYUNIT_ASSERT_UINT32(var) \
-    MYUNIT_ASSERT("UINT32", MYUNIT_INRANGE(var,0,UINT32_MAX))
+#define MYUNIT_ASSERT_UINT32_RANGE(var) \
+    MYUNIT_ASSERT("UINT32_RANGE", MYUNIT_INRANGE(var,0,UINT32_MAX))
 
 
 /*!
@@ -567,8 +567,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
     \param var  The variable being checked
 */
-#define MYUNIT_ASSERT_INT32(var) \
-        MYUNIT_ASSERT("UINT32", MYUNIT_INRANGE(var,UINT32_MIN,UINT32_MAX))
+#define MYUNIT_ASSERT_INT32_RANGE(var) \
+        MYUNIT_ASSERT("UINT32_RANGE", MYUNIT_INRANGE(var,UINT32_MIN,UINT32_MAX))
 
 /*!
     \brief Asserts that a given variable is within the valid range for a uint16_t.
@@ -578,8 +578,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
     \param var  The variable being checked
 */
-#define MYUNIT_ASSERT_UINT16(var) \
-        MYUNIT_ASSERT("UINT16", MYUNIT_INRANGE(var,0,UINT16_MAX))
+#define MYUNIT_ASSERT_UINT16_RANGE(var) \
+        MYUNIT_ASSERT("UINT16_RANGE", MYUNIT_INRANGE(var,0,UINT16_MAX))
 
 
 /*!
@@ -590,8 +590,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
     \param var  The variable being checked
 */
-#define MYUNIT_ASSERT_INT16(var) \
-    MYUNIT_ASSERT("INT16", MYUNIT_INRANGE(var,UINT16_MIN,UINT16_MAX))
+#define MYUNIT_ASSERT_INT16_RANGE(var) \
+    MYUNIT_ASSERT("INT16_RANGE", MYUNIT_INRANGE(var,UINT16_MIN,UINT16_MAX))
 
 /*!
     \brief Asserts that a given variable is within the valid range for a uint8_t.
@@ -601,8 +601,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
     \param var  The variable being checked
 */
-#define MYUNIT_ASSERT_UINT8(var) \
-        MYUNIT_ASSERT("UINT8", MYUNIT_INRANGE(var,0,UINT8_MAX))
+#define MYUNIT_ASSERT_UINT8_RANGE(var) \
+        MYUNIT_ASSERT("UINT8_RANGE", MYUNIT_INRANGE(var,0,UINT8_MAX))
 
 
 /*!
@@ -613,8 +613,8 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
     \param var  The variable being checked
 */
-#define MYUNIT_ASSERT_INT8(var) \
-    MYUNIT_ASSERT("INT8", MYUNIT_INRANGE(var,UINT8_MIN,UINT8_MAX))
+#define MYUNIT_ASSERT_INT8_RANGE(var) \
+    MYUNIT_ASSERT("INT8_RANGE", MYUNIT_INRANGE(var,UINT8_MIN,UINT8_MAX))
 
 /*!
     \brief Asserts that a specific checkpoint has been passed.

@@ -138,11 +138,11 @@ MYUNIT_TESTCASE(test_assert_32bit)
 
     // Passing Assertion:
     // Test that 'value1' fits within the 32-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_UINT32(value1);
+    MYUNIT_ASSERT_UINT32_RANGE(value1);
 
     // Failing Assertion:
     // Test that 'value2' fits within the 32-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_UINT32(value2);
+    MYUNIT_ASSERT_UINT32_RANGE(value2);
 }
 
 
@@ -157,11 +157,11 @@ MYUNIT_TESTCASE(test_assert_16bit)
 
     // Passing Assertion:
     // Test that 'value1' fits within the 16-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_UINT16(value1);
+    MYUNIT_ASSERT_UINT16_RANGE(value1);
 
     // Failing Assertion:
     // Test that 'value2' fits within the 16-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_UINT16(value2);
+    MYUNIT_ASSERT_UINT16_RANGE(value2);
 }
 
 
@@ -177,11 +177,11 @@ MYUNIT_TESTCASE(test_assert_8bit)
 
     // Passing Assertion:
     // Test that 'value1' fits within the 8-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_UINT8(value1);
+    MYUNIT_ASSERT_UINT8_RANGE(value1);
 
     // Failing Assertion:
     // Test that 'value2' fits within the 8-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_UINT8(value2);
+    MYUNIT_ASSERT_UINT8_RANGE(value2);
 }
 
 
