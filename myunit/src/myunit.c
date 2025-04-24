@@ -43,7 +43,6 @@ int myunit_testcase_assert_success_count;    /*!< Successful assertions in the c
 int myunit_testcase_assert_fail_count;       /*!< Failed assertions in the current test case. Reset after each test case.*/
 int myunit_testcase_success_count;           /*!< Successfully completed test cases in the test suite. */
 int myunit_testcase_fail_count;              /*!< Failed test cases in the test suite. */
-int myunit_sequence_fail_count;              /*!< Failed test cases in a test sequence */
 
 void (*myunit_action)(void) = NULL;
 

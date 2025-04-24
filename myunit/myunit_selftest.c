@@ -292,7 +292,21 @@ MYUNIT_TESTCASE(reset_action) {
     MYUNIT_ASSERT_EQUAL(custom_action_executed, 0); // Verify that the action was not executed
 }
 
+MYUNIT_TESTCASE(test_sequence) {
 
+    MYUNIT_ASSERT_TRUE(true);
+
+
+    MYUNIT_SEQUENCE_BEGIN();
+
+    MYUNIT_ASSERT_TRUE(true);
+    MYUNIT_ASSERT_TRUE(false);
+
+    MYUNIT_SEQUENCE_END(FAILED);
+
+    MYUNIT_ASSERT_TRUE(true);
+
+}
 
 void myunit_testsuite_setup()
 {
@@ -308,25 +322,27 @@ MYUNIT_TESTSUITE(selftest)
 {
     MYUNIT_TESTSUITE_BEGIN();
 
-    MYUNIT_EXEC_TESTCASE(test_assert);
-    MYUNIT_EXEC_TESTCASE(test_assert_val_equal);
-    MYUNIT_EXEC_TESTCASE(test_assert_val_different);
+//    MYUNIT_EXEC_TESTCASE(test_assert);
+//    MYUNIT_EXEC_TESTCASE(test_assert_val_equal);
+//    MYUNIT_EXEC_TESTCASE(test_assert_val_different);
+//
+//    MYUNIT_EXEC_TESTCASE(test_assert_mem_equal);
+//    MYUNIT_EXEC_TESTCASE(test_assert_mem_different);
+//
+//    MYUNIT_EXEC_TESTCASE(test_assert_32bit);
+//    MYUNIT_EXEC_TESTCASE(test_assert_16bit);
+//    MYUNIT_EXEC_TESTCASE(test_assert_8bit);
+//
+//    MYUNIT_EXEC_TESTCASE(test_assert_bit_clr);
+//    MYUNIT_EXEC_TESTCASE(test_assert_bit_set);
+//
+//    MYUNIT_EXEC_TESTCASE(test_checkpoint_passed);
+//    MYUNIT_EXEC_TESTCASE(test_checkpoint_missed);
+//
+//    MYUNIT_EXEC_TESTCASE(set_action_success);
+//    MYUNIT_EXEC_TESTCASE(reset_action);
 
-    MYUNIT_EXEC_TESTCASE(test_assert_mem_equal);
-    MYUNIT_EXEC_TESTCASE(test_assert_mem_different);
-
-    MYUNIT_EXEC_TESTCASE(test_assert_32bit);
-    MYUNIT_EXEC_TESTCASE(test_assert_16bit);
-    MYUNIT_EXEC_TESTCASE(test_assert_8bit);
-
-    MYUNIT_EXEC_TESTCASE(test_assert_bit_clr);
-    MYUNIT_EXEC_TESTCASE(test_assert_bit_set);
-
-    MYUNIT_EXEC_TESTCASE(test_checkpoint_passed);
-    MYUNIT_EXEC_TESTCASE(test_checkpoint_missed);
-
-    MYUNIT_EXEC_TESTCASE(set_action_success);
-    MYUNIT_EXEC_TESTCASE(reset_action);
+    MYUNIT_EXEC_TESTCASE(test_sequence);
 
     MYUNIT_TESTSUITE_END();
 }

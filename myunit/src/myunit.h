@@ -296,6 +296,8 @@ extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
     #define myunit_testcase_end_tag         "<TCE>" /*!< Tag indicating the end of a test case */
     #define myunit_testsuite_begin_tag      "<TSB>" /*!< Tag indicating the start of a test suite */
     #define myunit_testsuite_end_tag        "<TSE>" /*!< Tag indicating the end of a test suite */
+    #define myunit_sequence_begin_tag       "<SQB>" /*!< Tag indicating the start of a test sequence */
+    #define myunit_sequence_end_tag         "<SQE>" /*!< Tag indicating the end of a test sequence */
 
 
     #if ( MYUNIT_VERBOSITY_LEVEL == 1 )
@@ -657,24 +659,40 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 
 
 #define MYUNIT_SEQUENCE_BEGIN() \
-        do { \
-        myunit_sequence_fail_count = myunit_testcase_assert_fail_count;
+        { \
+            bool seq_passed = false; \
+            { \
+                MYUNIT_PRINTF("%s %s %d\n",myunit_sequence_begin_tag,myunit_testsuite_name,__LINE__); \
+                int myunit_testcase_assert_fail_count = 0; \
+                int myunit_testcase_assert_success_count = 0;
 
-
-#define MYUNIT_SEQUENCE_END() \
-        myunit_sequence_fail_count = myunit_testcase_assert_fail_count - myunit_sequence_fail_count; \
+#define MYUNIT_SEQUENCE_END(status) \
+                seq_passed = MYUNIT_HAS_SEQUENCE_PASSED(); \
+                MYUNIT_PRINTF("%s %s %d %d\n",myunit_sequence_end_tag,myunit_testsuite_name,__LINE__,seq_passed); \
+            }while(0); \
+            MYUNIT_ASSERT_SEQUENCE_##status(); \
         }while(0)
 
 
-#define MYUNIT_SEQUENCE_STATUS() (myunit_sequence_fail_count)
+
+/*! Following macros must only be used within a test sequence section!*/
+#define MYUNIT_SEQUENCE_STATUS() (myunit_testcase_assert_fail_count)
 #define MYUNIT_HAS_SEQUENCE_PASSED() (MYUNIT_SEQUENCE_STATUS() == 0)
 #define MYUNIT_HAS_SEQUENCE_FAILED() (!MYUNIT_HAS_SEQUENCE_PASSED())
 
+/*! Sequence assertion macros are private and may only be used by MYUNIT_SEQUENCE_END macro! */
 #define MYUNIT_ASSERT_SEQUENCE_PASSED() \
-    MYUNIT_ASSERT("SEQ_PASSED",MYUNIT_HAS_SEQUENCE_PASSED())
-
+    MYUNIT_ASSERT("SEQ_PASSED",seq_passed)
+/*!Sequence assertion macros are private and may only be used by MYUNIT_SEQUENCE_END macro! */
 #define MYUNIT_ASSERT_SEQUENCE_FAILED() \
-    MYUNIT_ASSERT("SEQ_FAILED",MYUNIT_HAS_SEQUENCE_FAILED())
+    MYUNIT_ASSERT("SEQ_FAILED",!seq_passed)
+
+
+
+
+
+
+
 
 
 #define MYUNIT_ASSERT_TRUE(cond) \

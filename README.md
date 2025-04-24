@@ -385,6 +385,52 @@ However, as a writer of unit tests, you typically use the higher-level assertion
     MYUNIT_ASSERT_CHECKPOINT_MISSED(4);
 ```
 
+### Using Sequences for Test Flow Validation
+
+Sequences are used to group a series of tests together, allowing you to verify a specific flow or scenario within your code. They are useful for ensuring that a series of operations occur in the correct order and that critical paths are executed as expected. By defining and validating sequences, you gain precise control over the test flow and can assert expected behaviors across multiple steps.
+
+Sequences work by tracking failures within a defined block of tests. A counter, `myunit_testcase_assert_fail_count`, is used to record any assertions that fail during the sequence. This counter is initialized at the beginning of the sequence and updated as assertions are evaluated.
+
+The macro `MYUNIT_SEQUENCE_BEGIN()` initializes the sequence by storing the current assertion fail count. It is typically called at the beginning of a sequence to provide a clean starting point. Here’s an example:
+
+```c
+    // Initialize the sequence at the start of the test
+    MYUNIT_SEQUENCE_BEGIN();
+    // ... your tests here ...
+```
+
+This ensures a predictable and consistent starting point for sequence testing.
+
+You define the tests within the sequence, and any failing assertions will increment the `myunit_testcase_assert_fail_count`. `MYUNIT_SEQUENCE_END()` is called at the end of the sequence to update the counter and reflect the number of failures that occurred within that specific block of tests.
+ 	
+```c
+    // ... your tests here ...
+    MYUNIT_SEQUENCE_END();
+```
+
+`MYUNIT_SEQUENCE_END()` updates the `myunit_testcase_assert_fail_count`, effectively capturing the total number of failures within the sequence.
+
+To check the status of a sequence, you can use the macro `MYUNIT_SEQUENCE_STATUS()`, which returns the current value of `myunit_testcase_assert_fail_count`. You can then use the macros `MYUNIT_HAS_SEQUENCE_PASSED()` and `MYUNIT_HAS_SEQUENCE_FAILED()` to determine if the sequence passed or failed, respectively.
+
+```c
+    // ... your tests here ...
+
+    if (MYUNIT_SEQUENCE_PASSED())
+    {
+        // Do something if the sequence passed
+    }
+    else
+    {
+        // Handle the case where the sequence failed
+    }
+    
+    MYUNIT_SEQUENCE_END();
+```
+
+`MYUNIT_SEQUENCE_PASSED()` returns true if the sequence passed (no failures), while `MYUNIT_SEQUENCE_FAILED()` returns true if the sequence failed (one or more failures).
+
+**Important Note:** The macros `MYUNIT_SEQUENCE_STATUS()`, `MYUNIT_HAS_SEQUENCE_PASSED()`, and `MYUNIT_HAS_SEQUENCE_FAILED()` are only valid for use *within* a sequence section. It only makes sense to check the sequence status directly before calling `MYUNIT_SEQUENCE_END()`, and only if you need to inspect the status before the sequence is finalized.  Checking these macros outside of a sequence section will yield undefined behavior.
+
 ### Understanding Tags
 Tags (`<...>`) are structured markers used to generate consistent, machine-readable output during test execution. These tags provide key information about the progress and results of test suites and cases, including details about assertions, failures, and summaries. Each tag follows a predefined format, making it easy to parse and analyze the output programmatically or manually.
 
