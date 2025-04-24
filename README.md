@@ -1,6 +1,7 @@
 
-
 # myunit - A Practical Approach to Unit Testing
+
+This project initially forked from the well-regarded uCUnit framework. While building upon its foundation, significant modifications were made to better suit specific needs, particularly regarding output options and the assertion macros themselves.  To clearly differentiate it from the original, I renamed it to myunit.
 
 myunit is a collection of macros tailored for embedded systems, enabling the definition, execution, and validation of unit tests. Implemented in C, it provides macros for a range of test functionalities, such as memory comparisons, value checks, and checkpoint validations. The macros are designed to support configurable verbosity levels for test logging and can be adapted to platform-specific needs. myunit is not a complete framework but rather a lightweight toolset focused on facilitating unit tests for low-level functionality in environments with limited resources. The primary functionality centers around assertion macros, rather than a complete suite of tools for managing the entire unit testing process.
 
