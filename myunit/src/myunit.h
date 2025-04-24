@@ -500,7 +500,7 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
     \param mem2 Pointer to the second memory region.
     \param size The number of bytes to compare between the two memory regions.
 */
-#define MYUNIT_ASSERT_MEM_DIFFERENT(mem1,mem2,size) \
+#define MYUNIT_ASSERT_MEM_DIFFER(mem1,mem2,size) \
     MYUNIT_ASSERT("MEM_DIFFERENT",memcmp(mem1,mem2,size) != 0)
 
 /*!
@@ -521,34 +521,100 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 #define MYUNIT_ASSERT_DIFFER(var1,var2) \
     MYUNIT_ASSERT("DIFFER",var1 != var2)
 
-/*!
-    \brief Asserts that a value fits within 32 bits.
-    \details This macro checks if the provided value fits within a 32-bit range (i.e., its upper bits beyond 32 are not set).
-             If the value exceeds 32 bits, the assertion will fail.
-    \param var The value to check if it is within the 32-bit range.
-*/
-#define MYUNIT_ASSERT_32BIT(var) \
-    MYUNIT_ASSERT("32BIT",var==(var&0xFFFFFFFF))
+
+
 
 /*!
-    \brief Asserts that a value fits within 16 bits.
-    \details This macro checks if the provided value fits within a 16-bit range (i.e., its upper bits beyond 16 are not set).
-             If the value exceeds 16 bits, the assertion will fail.
-    \param var The value to check if it is within the 16-bit range.
-    \note This macro relies on `MYUNIT_ASSERT` for the assertion.
+    \brief Checks if a variable is within a specified range.
+
+    This macro evaluates whether `var` lies between `min` and `max`, inclusive.
 */
-#define MYUNIT_ASSERT_16BIT(var) \
-    MYUNIT_ASSERT("16BIT",var==(var&0xFFFF))
+#define MYUNIT_INRANGE(var,min,max) \
+        (((var) <= (max))&&((var) >= (min)))
+
 
 /*!
-    \def MYUNIT_ASSERT_8BIT
-    \brief Asserts that a value fits within 8 bits.
-    \details This macro checks if the provided value fits within an 8-bit range (i.e., its upper bits beyond 8 are not set).
-             If the value exceeds 8 bits, the assertion will fail.
-    \param var The value to check if it is within the 8-bit range.
+    \brief Asserts that a variable is within a specified range.
+
+    Asserts if `var` lies between `min` and `max`, inclusive.
+   
+    \param var The variable being checked, expected to be of comparable type with min and max.
+    \param min The minimum boundary of the range (inclusive).
+    \param max The maximum boundary of the range (inclusive).
 */
-#define MYUNIT_ASSERT_8BIT(var) \
-    MYUNIT_ASSERT("8BIT",var==(var&0xFF))
+#define MYUNIT_ASSERT_INRANGE(var,min,max) \
+    MYUNIT_ASSERT("INRANGE",MYUNIT_INRANGE(var,min,max))
+
+
+
+/*!
+    \brief Asserts that a given variable is within the valid range for a uint32_t.
+
+    This macro checks if `var` is greater or equal to 0 and less than or equal to
+    UINT32_MAX.
+
+    \param var  The variable being checked
+*/
+#define MYUNIT_ASSERT_UINT32(var) \
+    MYUNIT_ASSERT("UINT32", MYUNIT_INRANGE(var,0,UINT32_MAX))
+
+
+/*!
+    \brief Asserts that a given variable is within the valid range for a int32_t.
+
+    This macro checks if `var` is greater than or equal to INT32_MIN and less than or equal to
+    INT32_MAX.
+
+    \param var  The variable being checked
+*/
+#define MYUNIT_ASSERT_INT32(var) \
+        MYUNIT_ASSERT("UINT32", MYUNIT_INRANGE(var,UINT32_MIN,UINT32_MAX))
+
+/*!
+    \brief Asserts that a given variable is within the valid range for a uint16_t.
+
+    This macro checks if `var` is greater than or equal to 0 and less than or equal to
+    UINT16_MAX.
+
+    \param var  The variable being checked
+*/
+#define MYUNIT_ASSERT_UINT16(var) \
+        MYUNIT_ASSERT("UINT16", MYUNIT_INRANGE(var,0,UINT16_MAX))
+
+
+/*!
+    \brief Asserts that a given variable is within the valid range for a int16_t.
+
+    This macro checks if `var` is greater than or equal to INT16_MIN and less than or equal to
+    INT16_MAX.
+
+    \param var  The variable being checked
+*/
+#define MYUNIT_ASSERT_INT16(var) \
+    MYUNIT_ASSERT("INT16", MYUNIT_INRANGE(var,UINT16_MIN,UINT16_MAX))
+
+/*!
+    \brief Asserts that a given variable is within the valid range for a uint8_t.
+
+    This macro checks if `var` is greater than or equal to 0 and less than or equal to
+    UINT8_MAX.
+
+    \param var  The variable being checked
+*/
+#define MYUNIT_ASSERT_UINT8(var) \
+        MYUNIT_ASSERT("UINT8", MYUNIT_INRANGE(var,0,UINT8_MAX))
+
+
+/*!
+    \brief Asserts that a given variable is within the valid range for a int8_t.
+
+    This macro checks if `var` is greater than or equal to INT8_MIN and less than or equal to
+    INT8_MAX.
+
+    \param var  The variable being checked
+*/
+#define MYUNIT_ASSERT_INT8(var) \
+    MYUNIT_ASSERT("INT8", MYUNIT_INRANGE(var,UINT8_MIN,UINT8_MAX))
 
 /*!
     \brief Asserts that a specific checkpoint has been passed.

@@ -118,11 +118,11 @@ MYUNIT_TESTCASE(test_assert_mem_different)
 
     // Passing Assertion:
     // Test that 'buffer1' is different from 'buffer3'. This is expected to pass as both buffers have different values.
-    MYUNIT_ASSERT_MEM_DIFFERENT(buffer1, buffer3, sizeof(buffer1));
+    MYUNIT_ASSERT_MEM_DIFFER(buffer1, buffer3, sizeof(buffer1));
 
     // Failing Assertion:
     // Test that 'buffer1' is different from 'buffer2'. This is expected to fail as both buffers have the same values.
-    MYUNIT_ASSERT_MEM_DIFFERENT(buffer1, buffer2, sizeof(buffer1));
+    MYUNIT_ASSERT_MEM_DIFFER(buffer1, buffer2, sizeof(buffer1));
 }
 
 
@@ -138,11 +138,11 @@ MYUNIT_TESTCASE(test_assert_32bit)
 
     // Passing Assertion:
     // Test that 'value1' fits within the 32-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_32BIT(value1);
+    MYUNIT_ASSERT_UINT32(value1);
 
     // Failing Assertion:
     // Test that 'value2' fits within the 32-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_32BIT(value2);
+    MYUNIT_ASSERT_UINT32(value2);
 }
 
 
@@ -157,11 +157,11 @@ MYUNIT_TESTCASE(test_assert_16bit)
 
     // Passing Assertion:
     // Test that 'value1' fits within the 16-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_16BIT(value1);
+    MYUNIT_ASSERT_UINT16(value1);
 
     // Failing Assertion:
     // Test that 'value2' fits within the 16-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_16BIT(value2);
+    MYUNIT_ASSERT_UINT16(value2);
 }
 
 
@@ -177,11 +177,11 @@ MYUNIT_TESTCASE(test_assert_8bit)
 
     // Passing Assertion:
     // Test that 'value1' fits within the 8-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_8BIT(value1);
+    MYUNIT_ASSERT_UINT8(value1);
 
     // Failing Assertion:
     // Test that 'value2' fits within the 8-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_8BIT(value2);
+    MYUNIT_ASSERT_UINT8(value2);
 }
 
 
