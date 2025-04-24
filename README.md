@@ -403,7 +403,6 @@ Tags (`<...>`) are structured markers used to generate consistent, machine-reada
 <TCE> selftest test_assert 1 1 <\n>
 <TSE> selftest 1 1 0 1 <\n>
 ```
-Here's a shorter paragraph explaining the `<\n>` marker:
 
 Tags are delimited by a newline character, represented as `<\n>`. This signifies the end of each tag's information; for example, `<TSB> ... <\n>` indicates the complete tag. This newline separation is crucial for parsing and interpreting test results programmatically.
 
