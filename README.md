@@ -396,13 +396,16 @@ Tags (`<...>`) are structured markers used to generate consistent, machine-reada
    - `<TCF>`: Indicates a failed assertion. Provides the same details as `<TCP>`, along with information about the failure.
 
 ```plaintext
-<TSB> selftest "../src/myunit_selftest.c" "Nov 15 2024" "19:49:42"
-<TCB> selftest test_assert
-<TCP> selftest test_assert 11 "Check if 2 + 2 equals 4" "(2 + 2 == 4)"
-<TCF> selftest test_assert 15 "Check if 2 + 2 equals 5" "(2 + 2 == 5)"
-<TCE> selftest test_assert 1 1
-<TSE> selftest 1 1 0 1
+<TSB> selftest "../src/myunit_selftest.c" "Nov 15 2024" "19:49:42" <\n>
+<TCB> selftest test_assert <\n>
+<TCP> selftest test_assert 11 "Check if 2 + 2 equals 4" "(2 + 2 == 4)" <\n>
+<TCF> selftest test_assert 15 "Check if 2 + 2 equals 5" "(2 + 2 == 5)" <\n>
+<TCE> selftest test_assert 1 1 <\n>
+<TSE> selftest 1 1 0 1 <\n>
 ```
+Here's a shorter paragraph explaining the `<\n>` marker:
+
+Tags are delimited by a newline character, represented as `<\n>`. This signifies the end of each tag's information; for example, `<TSB> ... <\n>` indicates the complete tag. This newline separation is crucial for parsing and interpreting test results programmatically.
 
 Tags provide detailed information about where and why a test passed or failed, including the line number and test message. The structured format allows for easy parsing by scripts or tools, enabling integration with continuous integration (CI) systems. The standardized output format ensures that both humans and machines can interpret the results consistently.
 
