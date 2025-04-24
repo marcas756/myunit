@@ -405,7 +405,7 @@ You define the tests within the sequence, and any failing assertions will increm
  	
 ```c
     // ... your tests here ...
-    MYUNIT_SEQUENCE_END();
+    MYUNIT_SEQUENCE_END(PASSED/FAILED);
 ```
 
 `MYUNIT_SEQUENCE_END()` updates the `myunit_testcase_assert_fail_count`, effectively capturing the total number of failures within the sequence.
@@ -424,7 +424,7 @@ To check the status of a sequence, you can use the macro `MYUNIT_SEQUENCE_STATUS
         // Handle the case where the sequence failed
     }
     
-    MYUNIT_SEQUENCE_END();
+    MYUNIT_SEQUENCE_END(PASSED/FAILED);
 ```
 
 `MYUNIT_SEQUENCE_PASSED()` returns true if the sequence passed (no failures), while `MYUNIT_SEQUENCE_FAILED()` returns true if the sequence failed (one or more failures).
