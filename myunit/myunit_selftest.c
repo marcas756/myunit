@@ -126,64 +126,65 @@ MYUNIT_TESTCASE(test_assert_mem_different)
 }
 
 
-
-
-MYUNIT_TESTCASE(test_assert_32bit)
+MYUNIT_TESTCASE(test_inrange)
 {
-    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_32_BIT.
-    // It checks if the given value fits within a 32-bit unsigned integer range.
+    // PRECONDITIONS:
+    int var_within = 0;
+    int var_below = -15;
+    int var_above = 15;
 
-    uint64_t value1 = 0xFFFFFFFF;      // 32-bit maximum value (should pass)
-    uint64_t value2 = 0x1FFFFFFFF;     // Exceeds 32-bit range (should fail)
+    int min = -10;
+    int max = 10;
 
-    // Passing Assertion:
-    // Test that 'value1' fits within the 32-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_UINT32_RANGE(value1);
+    // EXECUTE TESTCASE:
 
-    // Failing Assertion:
-    // Test that 'value2' fits within the 32-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_UINT32_RANGE(value2);
+    // Within range
+    MYUNIT_ASSERT_INRANGE(var_within, min, max);  // Expect pass since var_within is within the range.
+
+    // Below minimum
+    // This should trigger an assertion failure.
+    MYUNIT_ASSERT_INRANGE(var_below, min, max);
+
+    // Above maximum
+    // This should also trigger an assertion failure.
+    MYUNIT_ASSERT_INRANGE(var_above, min, max);
+
+    // POSTCONDITIONS:
+    // The test will pass if var_within is within range and fail for var_below and var_above.
+}
+
+MYUNIT_TESTCASE(test_assert_uint32_range)
+{
+
 }
 
 
-
-MYUNIT_TESTCASE(test_assert_16bit)
+MYUNIT_TESTCASE(test_assert_int32_range)
 {
-    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_16BIT.
-    // It checks if the given value fits within a 16-bit unsigned integer range.
 
-    uint32_t value1 = 0xFFFF;      // 16-bit maximum value (should pass)
-    uint32_t value2 = 0x1FFFF;     // Exceeds 16-bit range (should fail)
+}
 
-    // Passing Assertion:
-    // Test that 'value1' fits within the 16-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_UINT16_RANGE(value1);
+MYUNIT_TESTCASE(test_assert_uint16_range)
+{
 
-    // Failing Assertion:
-    // Test that 'value2' fits within the 16-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_UINT16_RANGE(value2);
 }
 
 
-
-
-MYUNIT_TESTCASE(test_assert_8bit)
+MYUNIT_TESTCASE(test_assert_int16_range)
 {
-    // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_8BIT.
-    // It checks if the given value fits within an 8-bit unsigned integer range.
 
-    uint16_t value1 = 0xFF;      // 8-bit maximum value (should pass)
-    uint16_t value2 = 0x1FF;     // Exceeds 8-bit range (should fail)
-
-    // Passing Assertion:
-    // Test that 'value1' fits within the 8-bit unsigned integer range. This is expected to pass.
-    MYUNIT_ASSERT_UINT8_RANGE(value1);
-
-    // Failing Assertion:
-    // Test that 'value2' fits within the 8-bit unsigned integer range. This is expected to fail.
-    MYUNIT_ASSERT_UINT8_RANGE(value2);
 }
 
+
+MYUNIT_TESTCASE(test_assert_uint8_range)
+{
+
+}
+
+MYUNIT_TESTCASE(test_assert_int8_range)
+{
+
+}
 
 
 
@@ -322,25 +323,33 @@ MYUNIT_TESTSUITE(selftest)
 {
     MYUNIT_TESTSUITE_BEGIN();
 
-//    MYUNIT_EXEC_TESTCASE(test_assert);
-//    MYUNIT_EXEC_TESTCASE(test_assert_val_equal);
-//    MYUNIT_EXEC_TESTCASE(test_assert_val_different);
-//
-//    MYUNIT_EXEC_TESTCASE(test_assert_mem_equal);
-//    MYUNIT_EXEC_TESTCASE(test_assert_mem_different);
-//
-//    MYUNIT_EXEC_TESTCASE(test_assert_32bit);
-//    MYUNIT_EXEC_TESTCASE(test_assert_16bit);
-//    MYUNIT_EXEC_TESTCASE(test_assert_8bit);
-//
-//    MYUNIT_EXEC_TESTCASE(test_assert_bit_clr);
-//    MYUNIT_EXEC_TESTCASE(test_assert_bit_set);
-//
-//    MYUNIT_EXEC_TESTCASE(test_checkpoint_passed);
-//    MYUNIT_EXEC_TESTCASE(test_checkpoint_missed);
-//
-//    MYUNIT_EXEC_TESTCASE(set_action_success);
-//    MYUNIT_EXEC_TESTCASE(reset_action);
+    MYUNIT_EXEC_TESTCASE(test_assert);
+    MYUNIT_EXEC_TESTCASE(test_assert_val_equal);
+    MYUNIT_EXEC_TESTCASE(test_assert_val_different);
+
+    MYUNIT_EXEC_TESTCASE(test_assert_mem_equal);
+    MYUNIT_EXEC_TESTCASE(test_assert_mem_different);
+
+
+    MYUNIT_EXEC_TESTCASE(test_inrange);
+
+    MYUNIT_EXEC_TESTCASE(test_assert_uint32_range);
+    MYUNIT_EXEC_TESTCASE(test_assert_uint16_range);
+    MYUNIT_EXEC_TESTCASE(test_assert_uint8_range);
+
+    MYUNIT_EXEC_TESTCASE(test_assert_int32_range);
+    MYUNIT_EXEC_TESTCASE(test_assert_int16_range);
+    MYUNIT_EXEC_TESTCASE(test_assert_int8_range);
+
+
+    MYUNIT_EXEC_TESTCASE(test_assert_bit_clr);
+    MYUNIT_EXEC_TESTCASE(test_assert_bit_set);
+
+    MYUNIT_EXEC_TESTCASE(test_checkpoint_passed);
+    MYUNIT_EXEC_TESTCASE(test_checkpoint_missed);
+
+    MYUNIT_EXEC_TESTCASE(set_action_success);
+    MYUNIT_EXEC_TESTCASE(reset_action);
 
     MYUNIT_EXEC_TESTCASE(test_sequence);
 

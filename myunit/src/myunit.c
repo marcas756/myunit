@@ -48,15 +48,4 @@ void (*myunit_action)(void) = NULL;
 
 MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
 
-void myunit_exec_testcase(void(*testcase)(void), char* name)
-{
-       myunit_testcase_assert_fail_count  = 0;
-       myunit_testcase_assert_success_count  = 0;
-       myunit_testcase_name = name;
-       MYUNIT_PRINTF("%s %s %s\n",myunit_testcase_begin_tag,myunit_testsuite_name,name);
-       testcase();
-       MYUNIT_PRINTF("%s %s %s %d %d\n",myunit_testcase_end_tag,myunit_testsuite_name,name,myunit_testcase_assert_fail_count,myunit_testcase_assert_success_count);
-       myunit_testsuite_assert_fail_count+=myunit_testcase_assert_fail_count;
-       myunit_testsuite_assert_success_count+=myunit_testcase_assert_success_count;
-       (myunit_testcase_assert_fail_count)?(myunit_testcase_fail_count++):(myunit_testcase_success_count++);
-}
+

@@ -115,7 +115,6 @@ extern int myunit_testcase_success_count;           /*!< Successfully completed 
 extern int myunit_testcase_fail_count;              /*!< Failed test cases in the test suite. */
 extern int myunit_testcase_assert_fail_count;       /*!< Failed assertions in the current test case. Reset after each test case.*/
 extern void (*myunit_action)(void);                 /*!< Function pointer invoked on assertion failure; if NULL, no action is taken. */
-extern int myunit_sequence_fail_count;
 
 
 /*!
@@ -414,14 +413,16 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
              to the test case and its name as a string for logging purposes.
     \param name The name of the test case to be executed. This should correspond to the name used in `MYUNIT_TESTCASE`.
 */
-#ifdef MYUNIT_LIST_UNITTESTS
-#define MYUNIT_EXEC_TESTCASE(name) \
-        myunit_platform_printf("%s\n",#name)
-#else
-#define MYUNIT_EXEC_TESTCASE(name) \
-        myunit_exec_testcase(myunit_testcase_##name,#name)
-#endif
 
+#define MYUNIT_EXEC_TESTCASE(name) \
+        myunit_testcase_assert_fail_count  = myunit_testcase_assert_success_count = 0; \
+        myunit_testcase_name = #name; \
+        MYUNIT_PRINTF("%s %s %s\n",myunit_testcase_begin_tag,myunit_testsuite_name,#name); \
+        myunit_testcase_##name(); \
+        MYUNIT_PRINTF("%s %s %s %d %d\n",myunit_testcase_end_tag,myunit_testsuite_name,#name,myunit_testcase_assert_fail_count,myunit_testcase_assert_success_count); \
+        myunit_testsuite_assert_fail_count+=myunit_testcase_assert_fail_count; \
+        myunit_testsuite_assert_success_count+=myunit_testcase_assert_success_count; \
+        (myunit_testcase_assert_fail_count)?(myunit_testcase_fail_count++):(myunit_testcase_success_count++);
 
 
 
@@ -570,7 +571,7 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
     \param var  The variable being checked
 */
 #define MYUNIT_ASSERT_INT32_RANGE(var) \
-        MYUNIT_ASSERT("UINT32_RANGE", MYUNIT_INRANGE(var,UINT32_MIN,UINT32_MAX))
+        MYUNIT_ASSERT("UINT32_RANGE", MYUNIT_INRANGE(var,INT32_MIN,INT32_MAX))
 
 /*!
     \brief Asserts that a given variable is within the valid range for a uint16_t.
@@ -593,7 +594,7 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
     \param var  The variable being checked
 */
 #define MYUNIT_ASSERT_INT16_RANGE(var) \
-    MYUNIT_ASSERT("INT16_RANGE", MYUNIT_INRANGE(var,UINT16_MIN,UINT16_MAX))
+    MYUNIT_ASSERT("INT16_RANGE", MYUNIT_INRANGE(var,INT16_MIN,INT16_MAX))
 
 /*!
     \brief Asserts that a given variable is within the valid range for a uint8_t.
@@ -616,7 +617,7 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
     \param var  The variable being checked
 */
 #define MYUNIT_ASSERT_INT8_RANGE(var) \
-    MYUNIT_ASSERT("INT8_RANGE", MYUNIT_INRANGE(var,UINT8_MIN,UINT8_MAX))
+    MYUNIT_ASSERT("INT8_RANGE", MYUNIT_INRANGE(var,INT8_MIN,INT8_MAX))
 
 /*!
     \brief Asserts that a specific checkpoint has been passed.
@@ -686,12 +687,6 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
 /*!Sequence assertion macros are private and may only be used by MYUNIT_SEQUENCE_END macro! */
 #define MYUNIT_ASSERT_SEQUENCE_FAILED() \
     MYUNIT_ASSERT("SEQ_FAILED",!seq_passed)
-
-
-
-
-
-
 
 
 
