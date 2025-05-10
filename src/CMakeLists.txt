@@ -1,19 +1,20 @@
 cmake_minimum_required (VERSION 3.8)
 project(myunit C)
 
-set_property(DIRECTORY APPEND PROPERTY
-  COMPILE_DEFINITIONS $<$<CONFIG:Debug>:DEBUG=1>
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_subdirectory(platform)
+
+
+SET (MYUNIT_HEADERS 
+    myunit.h  
 )
-  
-#set(CMAKE_C_FLAGS "-std=c99 -Wall -pedantic-errors -O1")
 
-
-add_subdirectory(src)
-
-include_directories (
-    ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/src
+SET (MYUNIT_OBJECTS
+    $<TARGET_OBJECTS:myunit_platform>
     )
+
+add_library(myunit ${MYUNIT_OBJECTS})
 
 add_executable(myunit_selftest myunit_selftest.c )
 #target_compile_definitions(myunit_selftest PRIVATE  MYUNIT_VERBOSE=MYUNIT_VERB3_ALL_ASSERTS)
