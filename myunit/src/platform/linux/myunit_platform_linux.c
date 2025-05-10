@@ -39,9 +39,10 @@
 
 int myunit_platform_printf ( const char * format, ... )
 {
+    int retval;
     va_list arglist;
     va_start( arglist, format );
-    int retval = vprintf( format, arglist );
+    retval = vprintf( format, arglist );
     va_end( arglist );
     return retval;
 }

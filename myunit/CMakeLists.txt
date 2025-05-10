@@ -5,7 +5,7 @@ set_property(DIRECTORY APPEND PROPERTY
   COMPILE_DEFINITIONS $<$<CONFIG:Debug>:DEBUG=1>
 )
   
-set(CMAKE_C_FLAGS "-std=c99 -Wall -pedantic-errors -O1")
+#set(CMAKE_C_FLAGS "-std=c99 -Wall -pedantic-errors -O1")
 
 
 add_subdirectory(src)
@@ -16,5 +16,5 @@ include_directories (
     )
 
 add_executable(myunit_selftest myunit_selftest.c )
-target_compile_definitions(myunit_selftest PRIVATE  MYUNIT_VERBOSE=MYUNIT_VERB3_ALL_ASSERTS)
+#target_compile_definitions(myunit_selftest PRIVATE  MYUNIT_VERBOSE=MYUNIT_VERB3_ALL_ASSERTS)
 target_link_libraries(myunit_selftest myunit)

@@ -232,9 +232,11 @@ MYUNIT_TESTCASE(test_checkpoint_passed)
     // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_CHECKPOINT_PASSED.
     // It checks whether a specific checkpoint has been passed (bit set) using the MYUNIT_ASSERT_CHECKPOINT_PASSED macro.
 
+    uint32_t checkpoint_bit;
+
     // Set up checkpoint system
     MYUNIT_CHECKPOINS_INIT();    // Initialize all checkpoints to 0
-    uint32_t checkpoint_bit = 5; // We are checking checkpoint 5
+    checkpoint_bit = 5; // We are checking checkpoint 5
 
     // Set checkpoint 5
     MYUNIT_CHECKPOINT_SET(checkpoint_bit);
@@ -253,9 +255,11 @@ MYUNIT_TESTCASE(test_checkpoint_missed)
     // Test case description: This test case demonstrates a passing and a failing example using MYUNIT_ASSERT_CHECKPOINT_MISSED.
     // It checks whether a specific checkpoint has been missed (bit not set) using the MYUNIT_ASSERT_CHECKPOINT_MISSED macro.
 
+    uint32_t checkpoint_bit;
+
     // Set up checkpoint system
     MYUNIT_CHECKPOINS_INIT();    // Initialize all checkpoints to 0
-    uint32_t checkpoint_bit = 5; // We are checking checkpoint 5
+    checkpoint_bit = 5; // We are checking checkpoint 5
 
     // Set checkpoint 5
     MYUNIT_CHECKPOINT_SET(checkpoint_bit);

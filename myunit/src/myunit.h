@@ -106,15 +106,18 @@
     #define MYUNIT_ASSERT_VERBOSE_LEVEL  0
 #endif
 
-extern char *myunit_testsuite_name;                 /*!< Name of the current test suite */
-extern char *myunit_testcase_name;                  /*!< Name of the current test case */
-extern int myunit_testsuite_assert_fail_count;      /*!< Failed assertions in the test suite. */
-extern int myunit_testcase_assert_success_count;    /*!< Successful assertions in the current test case. Reset after each test case. */
-extern int myunit_testsuite_assert_success_count;   /*!< Successful assertions in the test suite. */
-extern int myunit_testcase_success_count;           /*!< Successfully completed test cases in the test suite. */
-extern int myunit_testcase_fail_count;              /*!< Failed test cases in the test suite. */
-extern int myunit_testcase_assert_fail_count;       /*!< Failed assertions in the current test case. Reset after each test case.*/
-extern void (*myunit_action)(void);                 /*!< Function pointer invoked on assertion failure; if NULL, no action is taken. */
+char *myunit_testsuite_name;                 /*!< Name of the current test suite */
+char *myunit_testcase_name;                  /*!< Name of the current test case */
+int myunit_testsuite_assert_fail_count;      /*!< Failed assertions in the test suite. */
+int myunit_testsuite_assert_success_count;   /*!< Successful assertions in the test suite. */
+int myunit_testcase_assert_success_count;    /*!< Successful assertions in the current test case. Reset after each test case. */
+int myunit_testcase_assert_fail_count;       /*!< Failed assertions in the current test case. Reset after each test case.*/
+int myunit_testcase_success_count;           /*!< Successfully completed test cases in the test suite. */
+int myunit_testcase_fail_count;              /*!< Failed test cases in the test suite. */
+
+void (*myunit_action)(void) = NULL;
+
+
 
 
 /*!
@@ -208,6 +211,8 @@ extern void myunit_platform_exception(void);
 #define MYUNIT_CHECKPOINTS(size) \
     uint8_t myunit_checkpoints[((size)+7)>>3]
 
+MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
+
 /*!
     \brief Declares the checkpoint storage array with a predefined size.
     \details Declares the `myunit_checkpoints` array using the predefined constant `MYUNIT_CHECKPOINT_SIZE`.
@@ -285,7 +290,6 @@ extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
     \param ... Variable arguments passed to the underlying platform's print function.
 */
 #if (MYUNIT_VERBOSITY_LEVEL !=  MYUNIT_SILENT)
-
 
     #define MYUNIT_PRINTF(...) myunit_platform_printf(__VA_ARGS__)
 
@@ -663,9 +667,10 @@ void myunit_exec_testcase(void(*testcase)(void), char* name);
         { \
             bool seq_passed = false; \
             { \
-                MYUNIT_PRINTF("%s %s %d\n",myunit_sequence_begin_tag,myunit_testsuite_name,__LINE__); \
                 int myunit_testcase_assert_fail_count = 0; \
-                int myunit_testcase_assert_success_count = 0;
+                int myunit_testcase_assert_success_count = 0;\
+                MYUNIT_PRINTF("%s %s %d\n",myunit_sequence_begin_tag,myunit_testsuite_name,__LINE__)
+
 
 #define MYUNIT_SEQUENCE_END(status) \
                 seq_passed = MYUNIT_HAS_SEQUENCE_PASSED(); \
