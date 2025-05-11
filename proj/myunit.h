@@ -199,8 +199,9 @@ extern void myunit_platform_exception(void);
 
 
 
-
+#ifndef MYUNIT_CHECKPOINT_SIZE
 #define MYUNIT_CHECKPOINT_SIZE 128 /*!< Defines the default number of checkpoints (128 bits). */
+#endif
 
 /*!
     \brief Declares the checkpoint storage array.
@@ -213,29 +214,30 @@ extern void myunit_platform_exception(void);
 
 MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
 
-/*!
-    \brief Declares the checkpoint storage array with a predefined size.
-    \details Declares the `myunit_checkpoints` array using the predefined constant `MYUNIT_CHECKPOINT_SIZE`.
-             The size defines the number of checkpoint bits that will be tracked, and the array is sized accordingly,
-             rounded up to the nearest byte.
-*/
-extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
 
 /*!
     \brief Sets a checkpoint at the given index
     \details This macro stores the current line number in the `myunit_checkpoints` array at the specified index.
     \param idx The index in the `myunit_checkpoints` array where the checkpoint will be set.
 */
-#define MYUNIT_CHECKPOINT_SET(bit) \
-    do{myunit_checkpoints[((unsigned)(bit))>>3] |= (1<<(((unsigned)(bit))&0x07));}while(0)
+void MYUNIT_CHECKPOINT_SET(uint8_t bit)
+{
+    myunit_checkpoints[((unsigned)(bit))>>3] |= (1<<(((unsigned)(bit))&0x07));
+}
 
 /*!
     \brief Clears a checkpoint at the given index
     \details This macro resets the value at the specified index in the `myunit_checkpoints` array to 0.
     \param idx The index in the `myunit_checkpoints` array where the checkpoint will be cleared.
 */
-#define MYUNIT_CHECKPOINT_CLR(bit) \
-    do{myunit_checkpoints[((unsigned)(bit))>>3] &= ~(1<<(((unsigned)(bit))&0x07));}while(0)
+void MYUNIT_CHECKPOINT_CLR(uint8_t bit)
+{
+    myunit_checkpoints[((unsigned)(bit))>>3] &= ~(1<<(((unsigned)(bit))&0x07));
+}
+
+
+
+
 
 
 /*!
@@ -245,8 +247,10 @@ extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
     \param bit The index of the checkpoint to check, where the macro verifies if the checkpoint has been passed.
     \return A non-zero value if the checkpoint is passed, zero otherwise.
 */
-#define MYUNIT_CHECKPOINT_PASSED(bit) \
-    ((unsigned)((myunit_checkpoints[((unsigned)(bit))>>3] & ((1<<(((unsigned)(bit))&0x07)))) > 0))
+bool MYUNIT_CHECKPOINT_PASSED(uint8_t bit)
+{
+    return ((unsigned)((myunit_checkpoints[((unsigned)(bit))>>3] & ((1<<(((unsigned)(bit))&0x07)))) > 0));
+}
 
 
 /*!
@@ -257,6 +261,16 @@ extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
     \return A non-zero value if the checkpoint is missed, zero otherwise.
 */
 #define MYUNIT_CHECKPOINT_MISSED(bit) (!MYUNIT_CHECKPOINT_PASSED(bit))
+
+
+
+#define MYUNIT_FLAG_SET(bit) MYUNIT_CHECKPOINT_SET(bit)
+#define MYUNIT_FLAG_CLR(bit) MYUNIT_CHECKPOINT_CLR(bit)
+#define MYUNIT_FLAG_IS_SET(bit) MYUNIT_CHECKPOINT_PASSED(bit)
+#define MYUNIT_FLAG_IS_CLR(bit) MYUNIT_CHECKPOINT_MISSED(bit)
+
+
+
 
 /*!
     \brief Retrieves the total number of checkpoints.
@@ -395,6 +409,18 @@ extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
 */
 #define MYUNIT_TESTCASE(name)  void myunit_testcase_##name(void)
 
+
+/*!
+    \brief Executes a specific test case within a test suite.
+    \details This macro calls the `myunit_exec_testcase` function to execute a test case, passing the function pointer
+             to the test case and its name as a string for logging purposes.
+    \param name The name of the test case to be executed. This should correspond to the name used in `MYUNIT_TESTCASE`.
+*/
+
+#define MYUNIT_EXEC_TESTCASE(name) \
+        myunit_exec_testcase(#name, myunit_testcase_##name)
+
+
 /*!
     \brief Executes a test case within the current test suite.
     \details This function runs a specified test case and prints relevant information about the test case's execution,
@@ -409,26 +435,17 @@ extern MYUNIT_CHECKPOINTS(MYUNIT_CHECKPOINT_SIZE);
           - The test case name (`name`)
           - The number of failed assertions in the test case (`myunit_testcase_assert_fail_count`)
 */
-void myunit_exec_testcase(void(*testcase)(void), char* name);
-
-/*!
-    \brief Executes a specific test case within a test suite.
-    \details This macro calls the `myunit_exec_testcase` function to execute a test case, passing the function pointer
-             to the test case and its name as a string for logging purposes.
-    \param name The name of the test case to be executed. This should correspond to the name used in `MYUNIT_TESTCASE`.
-*/
-
-#define MYUNIT_EXEC_TESTCASE(name) \
-        myunit_testcase_assert_fail_count  = myunit_testcase_assert_success_count = 0; \
-        myunit_testcase_name = #name; \
-        MYUNIT_PRINTF("%s %s %s\n",myunit_testcase_begin_tag,myunit_testsuite_name,#name); \
-        myunit_testcase_##name(); \
-        MYUNIT_PRINTF("%s %s %s %d %d\n",myunit_testcase_end_tag,myunit_testsuite_name,#name,myunit_testcase_assert_fail_count,myunit_testcase_assert_success_count); \
-        myunit_testsuite_assert_fail_count+=myunit_testcase_assert_fail_count; \
-        myunit_testsuite_assert_success_count+=myunit_testcase_assert_success_count; \
-        (myunit_testcase_assert_fail_count)?(myunit_testcase_fail_count++):(myunit_testcase_success_count++);
-
-
+void myunit_exec_testcase(char *name, void(*testcase)())
+{
+    myunit_testcase_assert_fail_count  = myunit_testcase_assert_success_count = 0;
+    myunit_testcase_name = name;
+    MYUNIT_PRINTF("%s %s %s\n",myunit_testcase_begin_tag,myunit_testsuite_name,name);
+    testcase();
+    MYUNIT_PRINTF("%s %s %s %d %d\n",myunit_testcase_end_tag,myunit_testsuite_name,name,myunit_testcase_assert_fail_count,myunit_testcase_assert_success_count);
+    myunit_testsuite_assert_fail_count+=myunit_testcase_assert_fail_count;
+    myunit_testsuite_assert_success_count+=myunit_testcase_assert_success_count;
+    (myunit_testcase_assert_fail_count)?(myunit_testcase_fail_count++):(myunit_testcase_success_count++);
+}
 
 
 /*!
