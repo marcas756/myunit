@@ -41,7 +41,6 @@
 #include <stdbool.h>
 
 
-
 #define MYUNIT_SILENT                   0   /*!< \brief No output, silent mode */
 #define MYUNIT_VERB1_NO_ASSERTS         1   /*!< \brief Normal output, no asserts are printed */
 #define MYUNIT_VERB1_FAILED_ASSERTS     2   /*!< \brief Normal output, only failed asserts are printed */
@@ -657,6 +656,13 @@ void myunit_exec_testcase(char *name, void(*testcase)())
 */
 #define MYUNIT_ASSERT_CHECKPOINT_MISSED(idx)       \
     MYUNIT_ASSERT("CHKPNT_MISSED", MYUNIT_CHECKPOINT_MISSED(idx))
+
+
+#define MYUNIT_ASSERT_FLAG_CLR(idx)       \
+    MYUNIT_ASSERT("FLAG_CLR", MYUNIT_FLAG_IS_CLR(idx))
+
+#define MYUNIT_ASSERT_FLAG_SET(idx)       \
+    MYUNIT_ASSERT("FLAG_SET", MYUNIT_FLAG_IS_SET(idx))
 
 
 /*!
